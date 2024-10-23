@@ -401,3 +401,21 @@ def detect() -> Any:
 def trigger_error() -> Any:
     division_by_zero = 1 / 0
     return "Impossible"
+
+
+@app.route('/v1/jobs', methods=['GET'])
+def list_jobs():
+    jobs = []
+    for job_id in rq_queue.job_ids:
+        try:
+            job = Job.fetch(job_id, connection=redis_connection)
+            jobs.append({
+                'id': job.id,
+                'status': job.get_status(),
+                'created_at': job.created_at,
+                'meta': job.meta,
+                'download_url': f"/v1/download/{job.id}"
+            })
+        except NoSuchJobError:
+            continue
+    return render_template('jobs_list.html', jobs=jobs)

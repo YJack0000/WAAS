@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Jobs</title>
+</head>
+<body>
+    <h1>All Jobs</h1>
+    <table>
+        <tr>
+            <th>Job ID</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Filename</th>
+            <th>Download</th>
+        </tr>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.id }}</td>
+            <td>{{ job.status }}</td>
+            <td>{{ job.created_at }}</td>
+            <td>{{ job.meta.uploaded_filename }}</td>
+            <td>
+                {% if job.status == 'finished' %}
+                <a href="{{ job.download_url }}?output=srt">SRT</a> |
+                <a href="{{ job.download_url }}?output=vtt">VTT</a> |
+                <a href="{{ job.download_url }}?output=txt">TXT</a> |
+                <a href="{{ job.download_url }}?output=jojo">JOJO</a>
+                {% else %}
+                Not available
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
